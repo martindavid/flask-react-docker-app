@@ -1,0 +1,8 @@
+.DS_Store
+tags
+.tern_port
+tags.*
+node_modules
+desktop.ini
+.vscode
+.vim

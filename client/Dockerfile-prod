@@ -1,0 +1,44 @@
+# Do the npm install or yarn install in the full image
+FROM mhart/alpine-node:12 AS builder
+WORKDIR /usr/src/app
+
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
+
+RUN set -x \
+	&& apk update \
+	&& apk upgrade \
+	&& apk --no-cache --virtual .build-deps \
+	add pkgconfig autoconf automake libtool build-base zlib-dev \
+	&& npm install \
+	&& apk del .build-deps
+
+ARG REACT_APP_SERVICE_URL
+ENV REACT_APP_SERVICE_URL $REACT_APP_SERVICE_URL
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+ARG REACT_APP_BLOG_API_KEY
+ENV REACT_APP_BLOG_API_KEY $REACT_APP_BLOG_API_KEY
+ARG REACT_APP_SENTRY_DSN
+ENV REACT_APP_SENTRY_DSN $REACT_APP_SENTRY_DSN
+ARG REACT_APP_LOGROCKET_SLUG
+ENV REACT_APP_LOGROCKET_SLUG $REACT_APP_LOGROCKET_SLUG
+ARG REACT_APP_HOTJAR_ID
+ENV REACT_APP_HOTJAR_ID $REACT_APP_HOTJAR_ID
+ARG REACT_APP_GA_ID
+ENV REACT_APP_GA_ID $REACT_APP_GA_ID
+ARG REACT_APP_G_OPTIMIZE_ID
+ENV REACT_APP_G_OPTIMIZE_ID $REACT_APP_G_OPTIMIZE_ID
+
+COPY . /usr/src/app
+RUN NODE_OPTIONS=--max_old_space_size=4096 npm run build --production
+
+#########
+# FINAL #
+#########
+
+FROM mhart/alpine-node:base
+WORKDIR /app
+COPY --from=builder /usr/src/app .
+EXPOSE 3000
+CMD ["node_modules/.bin/next", "start"]
