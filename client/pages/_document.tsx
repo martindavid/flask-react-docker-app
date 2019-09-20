@@ -38,12 +38,14 @@ export default class CustomDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <title>Flask, React App</title>
           <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossOrigin="anonymous"
           />
+          <link rel="stylesheet" href="/static/styles/style.css" />
         </Head>
         <body>
           <Main />

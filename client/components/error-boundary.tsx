@@ -1,7 +1,6 @@
-import * as React from "react";
-import * as Sentry from "@sentry/browser";
+import React, { Component } from "react";
 
-export class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends Component {
   state = {
     error: null,
     eventId: null
@@ -9,13 +8,7 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error });
-    if (process.env.NODE_ENV !== "development") {
-      Sentry.withScope(scope => {
-        scope.setExtras(errorInfo);
-        const eventId = Sentry.captureException(error);
-        this.setState({ eventId });
-      });
-    }
+    console.log(error, errorInfo);
   }
 
   render() {
