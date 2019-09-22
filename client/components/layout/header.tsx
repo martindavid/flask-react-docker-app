@@ -9,14 +9,16 @@ export const Header = () => {
     setIsOpen(!isOpen);
   };
   return (
-    <div>
-      <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">Flask/NextJs App</NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Menu />
-        </Collapse>
-      </Navbar>
-    </div>
+    <header className="bg-light">
+      <div className="container">
+        <Navbar color="light" light expand="md">
+          <NavbarBrand href="/">Flask/NextJs App</NavbarBrand>
+          <NavbarToggler onClick={toggle} />
+          <Collapse isOpen={isOpen} navbar>
+            <Menu />
+          </Collapse>
+        </Navbar>
+      </div>
+    </header>
   );
 };

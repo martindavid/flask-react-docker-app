@@ -14,9 +14,14 @@ api = Api(users_blueprint)
 
 
 class Users(Resource):
-    def get(self, user_id: str):
+
+    method_decorators = {'get': [authenticate_restful]}
+
+    def get(self, resp, user_id: str):
         """Get single user details"""
         response_object = {'status': 'fail', 'message': 'User does not exist'}
+        log.debug(user_id)
+        log.debug(resp)
         try:
             user = UsersModel.query.filter_by(id=int(user_id)).first()
             if not user:
@@ -36,6 +41,7 @@ class Users(Resource):
 class UsersList(Resource):
 
     method_decorators = {
+        'get': [authenticate_restful],
         'post': [authenticate_restful],
         'put': [authenticate_restful]
     }

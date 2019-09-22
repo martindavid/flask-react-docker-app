@@ -1,14 +1,7 @@
 import { Api } from "./api";
 import { ApiResponse } from "apisauce";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api/api-problem";
-
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  admin: boolean;
-  active: boolean;
-}
+import { User } from "./types";
 
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem;
 export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem;
@@ -24,7 +17,27 @@ export class UserApi extends Api {
     };
   }
 
-  async getUsers(): Promise<GetUsersResult> {
+  async getUserById(id: number, token: string): Promise<GetUserResult> {
+    this.apisauce.setHeader("Authorization", `Bearer ${token}`);
+    const response: ApiResponse<any> = await this.apisauce.get(
+      `/api/v1/users/${id}`
+    );
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+
+    try {
+      const user: User = response.data.data;
+      return { kind: "ok", user: user };
+    } catch {
+      return { kind: "bad-data" };
+    }
+  }
+
+  async getUsers(token: string): Promise<GetUsersResult> {
+    this.apisauce.setHeader("Authorization", `Bearer ${token}`);
     const response: ApiResponse<any> = await this.apisauce.get("/api/v1/users");
 
     if (!response.ok) {

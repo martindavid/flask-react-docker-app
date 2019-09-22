@@ -1,19 +1,12 @@
 import { Api } from "./api";
 import { ApiResponse } from "apisauce";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api/api-problem";
+import { User } from "./types";
 
-export interface UserStatus {
-  id: number;
-  username: string;
-  email: string;
-  active: boolean;
-  admin: boolean;
-}
-
-export type AuthResponse = { kind: "ok"; token: string } | GeneralApiProblem;
-export type UserStatusResponse =
-  | { kind: "ok"; user: UserStatus }
+export type AuthResponse =
+  | { kind: "ok"; token: string; user: User }
   | GeneralApiProblem;
+export type UserStatusResponse = { kind: "ok"; user: User } | GeneralApiProblem;
 export type GeneralStatusResponse =
   | { kind: "ok"; message: string }
   | GeneralApiProblem;
@@ -35,7 +28,7 @@ export class AuthApi extends Api {
 
     try {
       const data = response.data;
-      return { kind: "ok", token: data.auth_token };
+      return { kind: "ok", token: data.auth_token, user: data.user };
     } catch {
       return { kind: "bad-data" };
     }

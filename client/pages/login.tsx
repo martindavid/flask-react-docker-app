@@ -1,11 +1,13 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { withRouter, SingletonRouter } from "next/router";
 import { Layout } from "components/layout";
+import { AuthApi } from "services";
+import { login } from "utils/auth";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 
 const LoginForm = styled.form`
@@ -13,63 +15,74 @@ const LoginForm = styled.form`
   width: 40%;
 `;
 
-type LoginProps = {
-  router: SingletonRouter;
-};
+const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isError, setIsError] = useState(false);
 
-type LoginState = {
-  username: string;
-  password: string;
-};
-
-class Login extends Component<LoginProps, LoginState> {
-  state = {
-    username: "",
-    password: ""
-  };
-
-  onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
-    console.log("Login");
+    setIsError(false);
+    try {
+      const api = new AuthApi();
+      api.setup();
+      const response = await api.login(username, password);
+
+      if (response.kind === "ok") {
+        const { token, user } = response;
+        login(token, user);
+      } else {
+        setIsError(true);
+      }
+    } catch (err) {
+      setIsError(true);
+    }
   };
 
-  render() {
-    return (
-      <Layout>
-        <Container className="col-12">
-          <LoginForm onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input
-                name="username"
-                type="text"
-                className="form-control"
-                required
-                onChange={e => {
-                  this.setState({ username: e.target.value });
-                }}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                name="password"
-                required
-                type="password"
-                className="form-control"
-                onChange={e => {
-                  this.setState({ password: e.target.value });
-                }}
-              />
-            </div>
+  return (
+    <Layout>
+      <Container className="col-12">
+        <LoginForm onSubmit={onSubmit}>
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              className="form-control"
+              required
+              onChange={e => {
+                setUsername(e.target.value);
+              }}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              required
+              type="password"
+              className="form-control"
+              onChange={e => {
+                setPassword(e.target.value);
+              }}
+            />
+          </div>
+          <div className="form-group">
             <button type="submit" className="btn btn-primary float-right">
               Login
             </button>
-          </LoginForm>
-        </Container>
-      </Layout>
-    );
-  }
-}
+          </div>
+        </LoginForm>
+        {isError && (
+          <div className="mt-4 alert alert-danger" role="alert">
+            There's an error while login, please try again!
+          </div>
+        )}
+      </Container>
+    </Layout>
+  );
+};
 
-export default withRouter(Login);
+export default Login;
