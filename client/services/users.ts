@@ -17,10 +17,10 @@ export class UserApi extends Api {
     };
   }
 
-  async getUserById(id: number, token: string): Promise<GetUserResult> {
+  async getUserById(token: string): Promise<GetUserResult> {
     this.apisauce.setHeader("Authorization", `Bearer ${token}`);
     const response: ApiResponse<any> = await this.apisauce.get(
-      `/api/v1/users/${id}`
+      `/api/v1/users/${token}`
     );
 
     if (!response.ok) {

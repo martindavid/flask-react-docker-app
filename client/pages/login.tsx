@@ -29,8 +29,8 @@ const Login = () => {
       const response = await api.login(username, password);
 
       if (response.kind === "ok") {
-        const { token, user } = response;
-        login(token, user);
+        const { token } = response;
+        login(token);
       } else {
         setIsError(true);
       }

@@ -13,11 +13,9 @@ import cookie from "js-cookie";
 import { logout } from "utils/auth";
 
 export const Menu = () => {
-  let userData = null;
   let isLogin = false;
-  const user = cookie.get("user");
-  if (user) {
-    userData = JSON.parse(user);
+  const token = cookie.get("token");
+  if (token) {
     isLogin = true;
   }
 
@@ -47,7 +45,7 @@ export const Menu = () => {
       {isLogin && (
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav caret>
-            {userData.username}
+            User Menu
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem>

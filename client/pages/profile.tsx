@@ -25,7 +25,7 @@ const Profile = props => {
 };
 
 Profile.getInitialProps = async ctx => {
-  const { token, user } = nextCookie(ctx);
+  const { token } = nextCookie(ctx);
 
   const redirectOnError = () => {
     if (typeof window !== "undefined") {
@@ -39,8 +39,7 @@ Profile.getInitialProps = async ctx => {
   try {
     const api = new UserApi();
     api.setup();
-    const userData = JSON.parse(user);
-    const response = await api.getUserById(userData.id, token);
+    const response = await api.getUserById(token);
 
     if (response.kind === "ok") {
       const userData = response.user;

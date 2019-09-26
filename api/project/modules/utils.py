@@ -29,7 +29,7 @@ def authenticate(f):
         user = Users.query.filter_by(id=resp).first()
         if not user or not user.active:
             return jsonify(response_object), HTTPStatus.UNAUTHORIZED
-        return f(resp, *args, **kwargs)
+        return f(user, *args, **kwargs)
 
     return decorated_function
 
@@ -52,6 +52,6 @@ def authenticate_restful(f):
         user = Users.query.filter_by(id=resp).first()
         if not user or not user.active:
             return response_object, HTTPStatus.UNAUTHORIZED
-        return f(resp, *args, **kwargs)
+        return f(user, *args, **kwargs)
 
     return decorated_function

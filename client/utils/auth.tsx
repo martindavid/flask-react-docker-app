@@ -4,17 +4,14 @@ import nextCookie from "next-cookies";
 import cookie from "js-cookie";
 import Router from "next/router";
 import { getDisplayName } from "utils";
-import { User } from "services/types";
 
-export function login(token: string, user: User) {
+export function login(token: string) {
   cookie.set("token", token, { expires: 1 });
-  cookie.set("user", user, { expires: 1 });
   Router.push("/profile");
 }
 
 export function logout() {
   cookie.remove("token");
-  cookie.remove("user");
   // to support logging out from all windows
   window.localStorage.setItem("logout", Date.now().toString());
   Router.push("/login");

@@ -4,7 +4,6 @@ from flask import Blueprint, request
 from flask_restful import Resource, Api
 
 from project.modules.utils import authenticate_restful, is_admin
-from project.extensions import db
 from .models import Users as UsersModel
 
 log = logging.getLogger(__name__)
@@ -17,13 +16,12 @@ class Users(Resource):
 
     method_decorators = {'get': [authenticate_restful]}
 
-    def get(self, resp, user_id: str):
+    def get(self, user, token: str):
         """Get single user details"""
         response_object = {'status': 'fail', 'message': 'User does not exist'}
-        log.debug(user_id)
-        log.debug(resp)
+        log.debug(token)
+        log.debug(user)
         try:
-            user = UsersModel.query.filter_by(id=int(user_id)).first()
             if not user:
                 return response_object, HTTPStatus.NOT_FOUND
             else:
@@ -54,7 +52,7 @@ class UsersList(Resource):
         }
         return response_object, HTTPStatus.OK
 
-    def post(self, resp):
+    def post(self, user):
         post_data = request.get_json()
         response_object = {'status': 'fail', 'message': 'Invalid payload'}
         if not is_admin(resp):
@@ -75,7 +73,7 @@ class UsersList(Resource):
         except Exception as e:
             log.error(e)
 
-    def put(self, resp):
+    def put(self, user):
         post_data = request.get_json()
         response_object = {'status': 'fail', 'message': 'Invalid payload'}
         if not is_admin(resp):
@@ -97,5 +95,5 @@ class UsersList(Resource):
             log.error(e)
 
 
-api.add_resource(Users, '/api/v1/users/<user_id>')
+api.add_resource(Users, '/api/v1/users/<token>')
 api.add_resource(UsersList, '/api/v1/users')

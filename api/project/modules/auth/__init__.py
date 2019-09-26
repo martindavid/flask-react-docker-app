@@ -46,8 +46,7 @@ def login_user():
                 response_object = {
                     'status': 'success',
                     'message': 'Successfully logged in',
-                    'auth_token': auth_token.decode(),
-                    'user': user.to_json()
+                    'auth_token': auth_token.decode()
                 }
                 return jsonify(response_object), HTTPStatus.OK
         else:

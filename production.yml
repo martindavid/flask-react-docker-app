@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile-prod
+    restart: unless-stopped
+    ports:
+      - 5000
+    environment:
+      - FLASK_ENV=production
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-prod
+    restart: unless-stopped
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - client
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile-prod
+      args:
+        - NODE_ENV=production
+        - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL}
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
