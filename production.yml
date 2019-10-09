@@ -15,13 +15,15 @@ services:
       - SECRET_KEY=${SECRET_KEY}
 
   nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile-prod
-    restart: unless-stopped
+    image: linuxserver/letsencrypt
+    container_name: nginx
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - './nginx/prod.conf:/config/nginx/site-confs/default'
+    restart:
+      unless-stopped
     environment:
       - PUID=1050
       - PGID=1050
