@@ -21,6 +21,15 @@ services:
     restart: unless-stopped
     ports:
       - 80:80
+      - 443:443
+    environment:
+      - PUID=1050
+      - PGID=1050
+      - EMAIL=mvalentino@martinlabs.me
+      - URL=martinlabs.tech
+      - SUBDOMAINS=sandbox
+      - ONLY_SUBDOMAINS=true
+      - TZ=Australia/Melbourne
     depends_on:
       - api
       - client

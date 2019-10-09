@@ -1,4 +1,4 @@
-FROM nginx:1.15.8-alpine
+FROM linuxserver/letsencrypt
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY /prod.conf /etc/nginx/conf.d
+RUN rm /config/nginx/site-confs/default
+COPY /prod.conf /config/nginx/site-confs/default
