@@ -5,8 +5,6 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile-prod
-      cache_from:
-        - "${API_IMAGE}"
     image: "${API_IMAGE}"
     ports:
       - 5000
@@ -23,8 +21,6 @@ services:
       args:
         - NODE_ENV=production
         - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL}
-      cache_from: 
-        - "${CLIENT_IMAGE}"
     image: "${CLIENT_IMAGE}"
     ports:
       - 3000
