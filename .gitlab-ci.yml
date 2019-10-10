@@ -1,0 +1,52 @@
+image:
+  name: docker/compose:1.24.1
+  entrypoint: [""]
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+  - apk add --no-cache openssh-client bash
+  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+  - chmod +x ./setup_env.sh
+  - bash ./setup_env.sh
+
+build:
+  stage: build
+  script:
+    - export API_IMAGE=$IMAGE:api
+    - export CLIENT_IMAGE=$IMAGE:client
+    - export NGINX_IMAGE=$IMAGE:nginx
+    - docker pull $IMAGE:api || true
+    - docker pull $IMAGE:client || true
+    - docker pull $IMAGE:nginx || true
+    - docker-compose -f docker-compose.ci.yml build
+    - docker push $IMAGE:api
+    - docker push $IMAGE:client
+    - docker push $IMAGE:nginx
+
+deploy:
+  stage: deploy
+  script:
+    - export API_IMAGE=$IMAGE:api
+    - export CLIENT_IMAGE=$IMAGE:client
+    - export NGINX_IMAGE=$IMAGE:nginx
+    - mkdir -p ~/.ssh
+    - echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
+    - chmod +x ./deploy-prod.sh
+    - scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@$DO_IP_ADDRESS:/app
+    - bash ./deploy-prod.sh

@@ -5,7 +5,6 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile-prod
-    restart: unless-stopped
     ports:
       - 5000
     environment:
@@ -15,26 +14,12 @@ services:
       - SECRET_KEY=${SECRET_KEY}
 
   nginx:
-    image: linuxserver/letsencrypt
-    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-prod
     ports:
       - 80:80
       - 443:443
-    volumes:
-      - './nginx/prod.conf:/config/nginx/site-confs/default'
-    restart:
-      unless-stopped
-    environment:
-      - PUID=1050
-      - PGID=1050
-      - EMAIL=mvalentino@martinlabs.me
-      - URL=martinlabs.tech
-      - SUBDOMAINS=sandbox
-      - ONLY_SUBDOMAINS=true
-      - TZ=Australia/Melbourne
-    depends_on:
-      - api
-      - client
 
   client:
     build:
@@ -43,8 +28,7 @@ services:
       args:
         - NODE_ENV=production
         - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL}
-    restart: unless-stopped
     ports:
-      - 3000:3000
+      - 3000
     depends_on:
       - api
