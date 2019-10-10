@@ -3,9 +3,9 @@ import Document, {
   Head,
   Main,
   NextScript,
-  DocumentContext
-} from "next/document";
-import { ServerStyleSheet } from "styled-components";
+  DocumentContext,
+} from 'next/document';
+import {ServerStyleSheet} from 'styled-components';
 
 export default class CustomDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -15,7 +15,7 @@ export default class CustomDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
+          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
         });
 
       const initialProps = await Document.getInitialProps(ctx);
@@ -27,7 +27,7 @@ export default class CustomDocument extends Document {
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
-        )
+        ),
       };
     } finally {
       sheet.seal();
@@ -39,6 +39,10 @@ export default class CustomDocument extends Document {
       <Html lang="en">
         <Head>
           <title>Flask, React App</title>
+          <meta
+            name="description"
+            content="A simple application build using Flask and React framework NextJS"
+          />
           <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"

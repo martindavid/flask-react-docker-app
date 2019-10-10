@@ -1,0 +1,7 @@
+{
+  "name": "flask-react-app",
+	"version": 2,
+	"env": {
+		"REACT_APP_SERVICE_URL": "https://api.martinlabs.tech"
+	}
+}

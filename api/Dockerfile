@@ -13,10 +13,6 @@ WORKDIR /usr/src/app
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
-# add entrypoint.sh
-COPY ./entrypoint-dev.sh  /usr/src/app/entrypoint-dev.sh
-RUN chmod +x /usr/src/app/entrypoint-dev.sh
-
 # add app
 COPY . /usr/src/app
 

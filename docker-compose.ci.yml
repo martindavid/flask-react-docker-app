@@ -5,7 +5,9 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile-prod
-    restart: unless-stopped
+      cache_from:
+        - "${API_IMAGE}"
+    image: "${API_IMAGE}"
     ports:
       - 5000
     environment:
@@ -14,17 +16,6 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
 
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile-prod
-    restart: unless-stopped
-    ports:
-      - 80:80
-    depends_on:
-      - api
-      - client
-
   client:
     build:
       context: ./client
@@ -32,8 +23,10 @@ services:
       args:
         - NODE_ENV=production
         - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL}
-    restart: unless-stopped
+      cache_from: 
+        - "${CLIENT_IMAGE}"
+    image: "${CLIENT_IMAGE}"
     ports:
-      - 3000:3000
+      - 3000
     depends_on:
       - api

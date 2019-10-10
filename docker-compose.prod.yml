@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  api:
+    image: "${API_IMAGE}"
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - 5000
+    environment:
+      - FLASK_ENV=production
+      - APP_SETTINGS=project.config.ProductionConfig
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+
+  nginx:
+    image: linuxserver/letsencrypt
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/config/nginx/nginx.conf
+      - ./prod.conf:/config/nginx/site-confs/default
+    environment:
+      - PUID=1050
+      - PGID=1050
+      - EMAIL=${LETSENCRYPT_EMAIL}
+      - URL=martinlabs.tech
+      - SUBDOMAINS=${SUBDOMAIN}
+      - ONLY_SUBDOMAINS=true
+      - TZ=Australia/Melboure
+    depends_on:
+      - api
+      - client
+
+  client:
+    image: "${CLIENT_IMAGE}"
+    container_name: client
+    restart: unless-stopped
+    ports:
+      - 3000
+    depends_on:
+      - api
