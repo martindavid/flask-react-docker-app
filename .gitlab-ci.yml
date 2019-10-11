@@ -27,7 +27,7 @@ build:
     - export CLIENT_IMAGE=$IMAGE:client
     - docker pull $IMAGE:api || true
     - docker pull $IMAGE:client || true
-    - docker-compose -f docker-compose.ci.yml build
+    - docker-compose -f docker-compose.ci.yml build --no-cache
     - docker push $IMAGE:api
     - docker push $IMAGE:client
 
@@ -44,5 +44,5 @@ deploy:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
     - chmod +x ./deploy.sh
-    - scp  -o StrictHostKeyChecking=no -r ./nginx/prod.conf ./nginx/nginx.conf ./.env ./docker-compose.prod.yml root@$DO_IP_ADDRESS:/app
+    - scp  -o StrictHostKeyChecking=no -r ./.env ./nginx/prod.conf ./nginx/nginx.conf ./docker-compose.prod.yml root@$DO_IP_ADDRESS:/app
     - bash ./deploy.sh

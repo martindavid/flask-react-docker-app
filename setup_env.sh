@@ -5,7 +5,8 @@ echo CI_REGISTRY=$CI_REGISTRY  >> .env
 echo DATABASE_URL=$DATABASE_URL >> .env
 echo SECRET_KEY=$SECRET_KEY >> .env
 echo REACT_APP_SERVICE_URL=$REACT_APP_SERVICE_URL >> .env
-echo CLIENT_IMAGE=$IMAGE:client  >> .env
-echo API_IMAGE=$IMAGE:api  >> .env
 echo LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL >> .env
 echo SUBDOMAIN=$SUBDOMAIN >> .env
+
+echo CLIENT_IMAGE=$IMAGE:client  >> .env
+echo API_IMAGE=$IMAGE:api  >> .env
