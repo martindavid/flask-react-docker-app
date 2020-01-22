@@ -22,7 +22,7 @@ export const handleAuthSSR = async ctx => {
       });
       ctx.res.end();
     } else {
-      Router.push('/admin');
+      Router.push('/profile');
     }
   }
 };
