@@ -1,9 +1,9 @@
 -r requirements.txt
 
-docker-compose==1.24.1
-jedi==0.14.1
-python-language-server==0.28.1
-yapf==0.28.0
-pylint==2.3.1
+docker-compose==1.25.4
+jedi==0.15.0
+python-language-server==0.31.9
+yapf==0.29.0
+pylint==2.4.4
 pylama==7.7.1
-pip-review==1.0
+pip-review==1.1.0
