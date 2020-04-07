@@ -5,7 +5,7 @@ import os
 
 from flask import Flask
 from flask_migrate import Migrate
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 migrate = Migrate()
 

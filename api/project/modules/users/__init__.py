@@ -1,7 +1,7 @@
 import logging
 from http import HTTPStatus
 from flask import Blueprint, request
-from flask_restful import Resource, Api
+from flask_restx import Resource, Api
 
 from project.modules.utils import authenticate_restful, is_admin
 from .models import Users as UsersModel
